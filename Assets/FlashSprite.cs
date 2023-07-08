@@ -20,7 +20,6 @@ public class FlashSprite : MonoBehaviour
             bool flip = !this.gameObject.GetComponent<Image>().enabled;
             if (flip) {nextflip = Time.time + timeon;}
             else {nextflip = Time.time + timeoff;}
-            Debug.Log(nextflip);
             this.gameObject.GetComponent<Image>().enabled = flip;
         }
 
