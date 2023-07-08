@@ -8,7 +8,9 @@ public class linerenderer : MonoBehaviour
 {
     public LineRenderer lr;
     public Transform[] bz_points;
+    public float[] line_lengths;
     public bool ON = true;
+
     // public Transform[] points;
     // Start is called before the first frame update
     void Awake()
@@ -21,9 +23,12 @@ public class linerenderer : MonoBehaviour
     {
         if (ON)
         {
+            line_lengths = new float[bz_points.Length - 1];
+            Vector3 previous_temp = new Vector3(0, 0, 0);
             lr.positionCount = 100 * (bz_points.Length - 1)+1;
             for (int i = 0; i < bz_points.Length - 1; i++)
             {
+                float dist = 0;
                 for (int t = 0; t <= 100; t++)
                 {
                     float t_value = t * 0.01f;
@@ -40,7 +45,14 @@ public class linerenderer : MonoBehaviour
                            mirror_control,
                            t_value);
                     lr.SetPosition(i*100+t, temp);
+
+                    if (t!=0)
+                    {
+                        dist += Vector3.Distance(previous_temp, temp);
+                    }
+                    previous_temp = temp;
                 }
+                line_lengths[i] = dist;
             }
         }
     }
