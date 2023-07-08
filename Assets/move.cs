@@ -31,6 +31,7 @@ public class move : MonoBehaviour
         float y_score = Mathf.Max(0f, 1.4f - Mathf.Abs(distanceBetweenObjects[1]));
         // Squared it so that being closer gives a bigger benefit
         score_value += Mathf.Pow(x_score*y_score, 2)*Time.deltaTime*5f;
+
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
@@ -41,7 +42,14 @@ public class move : MonoBehaviour
         Vector3 tempspeed = current_input * speed * Time.deltaTime;
 
         obj.transform.position += tempspeed;
-
-        score_text.SetText("ScoreL " + Mathf.RoundToInt(score_value).ToString());
+        // Bad fix to the score going to 2 at first
+        if (score_value < 4)
+        {
+            score_text.SetText("Score: 0");
+        }
+        else
+        {
+            score_text.SetText("Score: " + Mathf.RoundToInt(score_value).ToString());
+        }
     }
 }

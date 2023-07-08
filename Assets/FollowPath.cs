@@ -10,14 +10,12 @@ public class FollowPath : MonoBehaviour
     public Transform obj;
     public Transform[] bz_points;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(Time.time);
         int i = (int)Mathf.Floor(Time.time / speed);
         float t_value = (Time.time % speed) / speed;
         float singleStep = angle_speed * Time.deltaTime;
