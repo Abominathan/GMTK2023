@@ -52,4 +52,9 @@ public class move : MonoBehaviour
             score_text.SetText("Score: " + Mathf.RoundToInt(score_value).ToString());
         }
     }
+
+    public float get_score()
+    {
+        return score_value;
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class FollowPath : MonoBehaviour
 {
@@ -9,41 +10,65 @@ public class FollowPath : MonoBehaviour
     public float angle_speed = 60f;
     public Transform obj;
     public Transform[] bz_points;
-    // Start is called before the first frame update
+
+    public TMP_Text finish_text;
+    public TextMeshProUGUI b2;
+    public string b2_text;
+    public GameObject end_panel;
+    public GameObject move_obj;
+
+    private float repeat_time = 0f;
 
 
+    private void Awake()
+    {
+        repeat_time = Time.time;
+    }
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Time.time);
-        int i = (int)Mathf.Floor(Time.time / speed);
-        float t_value = (Time.time % speed) / speed;
-        float singleStep = angle_speed * Time.deltaTime;
-        if (i < (bz_points.Length - 1))
-        { 
-            Vector3 lbz1c = 2f * bz_points[i + 1].Find("Knot").localPosition;
-            Vector3 mirror_control = lbz1c - bz_points[i + 1].Find("Control").localPosition;
+        if (Time.timeScale > 0)
+        {
+            Debug.LogFormat("REP "+repeat_time.ToString());
+            float run_time = Time.time - repeat_time;
+            Debug.LogFormat("RUN " + run_time.ToString());
+            int i = (int)Mathf.Floor(run_time / speed);
+            float t_value = (run_time % speed) / speed;
+            float singleStep = angle_speed * Time.deltaTime;
+            if (i < (bz_points.Length - 1))
+            {
+                Vector3 lbz1c = 2f * bz_points[i + 1].Find("Knot").localPosition;
+                Vector3 mirror_control = lbz1c - bz_points[i + 1].Find("Control").localPosition;
 
-            Vector3 temp = bernstien_bezeir(
-                bz_points[i].Find("Knot").position,
-                 bz_points[i].Find("Control").position,
-                  bz_points[i + 1].Find("Knot").position,
-                   mirror_control,
-                   t_value);
+                Vector3 temp = bernstien_bezeir(
+                    bz_points[i].Find("Knot").position,
+                     bz_points[i].Find("Control").position,
+                      bz_points[i + 1].Find("Knot").position,
+                       mirror_control,
+                       t_value);
 
-            obj.transform.position = temp;
-            Vector3 targetDirection = first_dir_bernstien_bezeir(
-                bz_points[i].Find("Knot").position,
-                 bz_points[i].Find("Control").position,
-                  bz_points[i + 1].Find("Knot").position,
-                   mirror_control,
-                   t_value);
+                obj.transform.position = temp;
+                Vector3 targetDirection = first_dir_bernstien_bezeir(
+                    bz_points[i].Find("Knot").position,
+                     bz_points[i].Find("Control").position,
+                      bz_points[i + 1].Find("Knot").position,
+                       mirror_control,
+                       t_value);
 
-            // Normal to direction of motion
-            targetDirection = Vector3.Cross(targetDirection, new Vector3(0,0,-1));
+                // Normal to direction of motion
+                targetDirection = Vector3.Cross(targetDirection, new Vector3(0, 0, -1));
 
-            Quaternion toRotation = Quaternion.LookRotation(Vector3.forward, targetDirection);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, singleStep);
+                Quaternion toRotation = Quaternion.LookRotation(Vector3.forward, targetDirection);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, singleStep);
+            }
+            else
+            {
+                float score_value = move_obj.GetComponent<move>().get_score();
+                finish_text.SetText("Skateboard Made it to the end.\n" + Mathf.RoundToInt(score_value).ToString());
+                b2.SetText(b2_text);
+                end_panel.SetActive(true);
+                Time.timeScale = 0;
+            }
         }
     }
 

@@ -32,7 +32,6 @@ public class linerenderer : MonoBehaviour
                 for (int t = 0; t <= 100; t++)
                 {
                     float t_value = t * 0.01f;
-                    Debug.Log(t_value);
 
                     Vector3 lbz1c = 2f * bz_points[i + 1].Find("Knot").localPosition;
                     Vector3 mirror_control = lbz1c - bz_points[i + 1].Find("Control").localPosition;

@@ -22,7 +22,5 @@ public class FlashSprite : MonoBehaviour
             else {nextflip = Time.time + timeoff;}
             this.gameObject.GetComponent<Image>().enabled = flip;
         }
-
-
     }
 }
